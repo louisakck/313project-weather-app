@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         humid = findViewById(R.id.humidText);
         todayWeatherImg = findViewById(R.id.todayWeatherImg);
 
-        todayWeather.setText("testing");
+
 
         /*-----------------------------------*/
 
@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
 
-        JSONObject jsonObj = null;
         if (response != null) {
             try {
-                jsonObj = new JSONObject(response);
+                JSONObject jsonObj = new JSONObject(response);
                 CurrentDetail current = new CurrentDetail(jsonObj);
                 updateUI(current);
+
 
             } catch (final JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
         //rain.setText;
         wind.setText(current.getWindSpeed());
         humid.setText(current.getHumidity());
+
+        todayWeather.setText("testing");
 
     }
 
