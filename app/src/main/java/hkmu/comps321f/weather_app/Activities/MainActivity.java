@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import com.bumptech.glide.Glide;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,35 +24,41 @@ import java.net.*;
 import java.util.ArrayList;
 import org.json.JSONObject;
 import org.json.JSONException;
+import java.util.List;
 
+import hkmu.comps321f.weather_app.Adapter.CurrentAdapter;
 import hkmu.comps321f.weather_app.Adapter.HourlyAdapter;
 import hkmu.comps321f.weather_app.Domains.CurrentDetail;
 import hkmu.comps321f.weather_app.Domains.Hourly;
+import hkmu.comps321f.weather_app.JsonHandler.JsonHandler;
 import hkmu.comps321f.weather_app.R;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adaptorHourly;
     private RecyclerView recyclerView;
 
-    final String APP_ID = "5a1b920d631fb8ee83f507ebc66efd19";
+    private String TAG = "MainActivity";
+
     final String lat = "22.3";
     final String lon = "114.1";
 
-    private String weatherUrl = "https://api.openweathermap.org/data/2.5/weather?lat=22.3&lon=114.1&appid=5a1b920d631fb8ee83f507ebc66efd19";
-            //"https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=APP" + APP_ID;
-    final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
+    //private String weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=22.2783&longitude=114.1747&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,wind_speed_10m_max";
+
+    //final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
     // URL to get contacts JSON file
     TextView date, todayWeather, currentTemp, tempRange, rain, wind, humid;
     ImageView todayWeatherImg;
+    LinearLayout currentLayout;
+    private List<CurrentDetail> list;
 
-    private static final String TAG = "JsonHandler";
-    String response = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        currentLayout = findViewById(R.id.cLayout);
 
+        date = findViewById(R.id.date);
         todayWeather = findViewById(R.id.todayWeatherText);
         currentTemp = findViewById(R.id.currentTemp);
         tempRange = findViewById(R.id.tempRangeText);
@@ -59,86 +67,34 @@ public class MainActivity extends AppCompatActivity {
         humid = findViewById(R.id.humidText);
         todayWeatherImg = findViewById(R.id.todayWeatherImg);
 
+        /*-----------------------------------*/
+        JsonHandler jsonHandler = new JsonHandler();
+        jsonHandler.start();
+        try{
+            jsonHandler.join();
+         } catch (InterruptedException e) {
+        Log.e(TAG, "InterruptedException: " + e.getMessage());
+        }
+        CurrentDetail current = CurrentDetail.currentDetailArrayList.get(0);
+        date.setText(current.getDate());
+        todayWeather.setText(current.getDescription());
+        currentTemp.setText(current.getTemp() + "°");
+        tempRange.setText("H: " + current.getTemp_max()+"°  L: " + current.getTemp_min() + "°");
+        rain.setText(current.getRain() + " mm");
+        wind.setText(current.getWind_speed() + " Km/h");
+        humid.setText(current.getHumidity() + " %");
+
+        int cWeatherIcon = getResources().getIdentifier(current.getPic_path(), "drawable", getPackageName());
+        todayWeatherImg.setImageResource(cWeatherIcon);
+
+        //CurrentAdapter currentAdapter = new CurrentAdapter(this,CurrentDetail.currentDetailArrayList);
+        //currentLayout.setAdapter(currentAdapter);
 
 
         /*-----------------------------------*/
 
-        try {
-            URL url = new URL(weatherUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            // Read the response
-            InputStream in = new BufferedInputStream(conn.getInputStream());
-            response = inputStreamToString(in);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "MalformedURLException: " + e.getMessage());
-        } catch (ProtocolException e) {
-            Log.e(TAG, "ProtocolException: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(TAG, "IOException: " + e.getMessage());
-        } catch (Exception e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
-        }
-
-        if (response != null) {
-            try {
-                JSONObject jsonObj = new JSONObject(response);
-                CurrentDetail current = new CurrentDetail(jsonObj);
-                updateUI(current);
-
-
-            } catch (final JSONException e) {
-                Log.e(TAG, "Json parsing error: " + e.getMessage());
-            }
-        } else {
-            Log.e(TAG, "Couldn't get json from server.");
-        }
-
-
-
-        /*-----------------------------------*/
-
-        initRecyclerView();
+        initRecyclerView(Hourly.hourlyArrayList);// hourly view
         setVariable();//ForecastPageButton*/
-    }
-
-    /*--------------get current weather Json-------------*/
-    private static String inputStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = "";
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append('\n');
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-
-
-
-/*-----------------------------------------------------*/
-    private void updateUI(CurrentDetail current){
-        todayWeather.setText(current.getStatus());
-        currentTemp.setText(current.getTemp());
-        String tempRangeText = "H: " + current.getTemp_max() + "  " + "L: " + current.getTemp_min();
-        tempRange.setText(tempRangeText);
-        //rain.setText;
-        wind.setText(current.getWindSpeed());
-        humid.setText(current.getHumidity());
-
-        todayWeather.setText("testing");
-
     }
 
     /*-----------ForecastPageButton-------------*/
@@ -153,17 +109,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*-----------Hourly RecyclerView-------------*/
-    private void initRecyclerView() {
-        ArrayList<Hourly> items= new ArrayList<>();
+    private void initRecyclerView(ArrayList<Hourly> hourlyArrayList) {
+
+        /*ArrayList<Hourly> items= new ArrayList<>();
         items.add(new Hourly("10 pm",20,"cloudy"));
         items.add(new Hourly("11 pm",20,"cloudy"));
         items.add(new Hourly("12 pm",20,"day_rain"));
         items.add(new Hourly("1 am",20,"cloudy"));
-        items.add(new Hourly("1 am",20,"cloudy"));
+        items.add(new Hourly("1 am",20,"cloudy"));*/
 
         recyclerView=findViewById(R.id.hourlyView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        adaptorHourly=new HourlyAdapter(items);
+        adaptorHourly=new HourlyAdapter(hourlyArrayList);
         recyclerView.setAdapter(adaptorHourly);
 
 
