@@ -15,6 +15,7 @@ public class ForecastDomain {
         this.lowTemp = lowTemp;
     }
 
+
     public String getDay() {
         return day;
     }
@@ -54,4 +55,5 @@ public class ForecastDomain {
     public void setLowTemp(int lowTemp) {
         this.lowTemp = lowTemp;
     }
+
 }

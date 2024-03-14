@@ -32,10 +32,25 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull HourlyAdapter.ViewHolder holder, int position) {
-        holder.hourText.setText(items.get(position).getHour());
+        int theHour = Integer.parseInt(items.get(position).getHour());
+        String theHourText;
+        if(theHour > 24){
+            theHourText = theHour % 12 + " am";
+        }else if(theHour == 24){
+            theHourText = "12 pm";
+        }
+        else if(theHour == 12){
+            theHourText = "12 noon";
+        }
+        else if(theHour > 12){
+            theHourText = theHour % 12 + " pm";
+        }else{
+            theHourText = theHour + " am";
+        }
+        holder.hourText.setText(theHourText);
         holder.tempText.setText(items.get(position).getTemp()+"°");
 
-        int drawableResourceId=holder.itemView.getResources().getIdentifier(items.get(position).getPicPath(), "drawable",holder.itemView.getContext().getPackageName());
+        int drawableResourceId=holder.itemView.getResources().getIdentifier(items.get(position).getPic_path(), "drawable",holder.itemView.getContext().getPackageName());
         Glide.with(context).load(drawableResourceId).into(holder.hourWeatherImg);
     }
 
