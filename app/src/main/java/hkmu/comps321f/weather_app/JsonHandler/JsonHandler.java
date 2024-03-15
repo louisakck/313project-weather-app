@@ -16,16 +16,19 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import hkmu.comps321f.weather_app.Domains.CurrentDetail;
 import hkmu.comps321f.weather_app.Domains.Hourly;
-import hkmu.comps321f.weather_app.Domains.weatherIconMap;
+import hkmu.comps321f.weather_app.Domains.wDataType;
 
 public class JsonHandler extends Thread {
     private static final String TAG = "JsonHandler";
 
-    private String weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=22.2783&longitude=114.1747&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,wind_speed_10m_max";
+    String lat = "22.2783";
+    String lon = "114.1747";
+
+    private String weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + lat +"&longitude=" + lon + "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,wind_speed_10m_max";
+    private final int NUM_OF_HOUR = 12;
 
     public static String makeRequest(String weatherUrl) {
         String response = null;
@@ -87,41 +90,47 @@ public class JsonHandler extends Thread {
                 CurrentDetail currentWeather = new CurrentDetail(jsonObj);
                 CurrentDetail.addCurrentDetail(currentWeather);
                 //get hourly weather
-                JSONObject current = jsonObj.getJSONObject("current");//move to current object for current time first
-                String time = retrieveTime(current.getString("time"));
-                JSONObject hourly = jsonObj.getJSONObject("hourly");
-                JSONArray tempArray = hourly.getJSONArray("temperature_2m");
-                JSONArray weatherArray = hourly.getJSONArray("weather_code");
-
-                int theTime = Integer.parseInt(time);
-                int endTime = theTime+12;
-                String temp, icon;
-                ArrayList<Hourly> hourlyArrayList = new ArrayList<>();
-                for (int i = theTime; i < endTime; i++) {
-                    String string_i = Integer.toString(i);
-                    temp = tempArray.getString(i);
-                    icon = weatherIconMap.wIconMap.get(weatherArray.getString(i));
-                    Hourly theHourly = new Hourly(string_i, temp, icon);
-                    Hourly.addHourly(theHourly);
-                }
-
-
-                //updateUI(current);
-
-
-            } catch (final JSONException e) {
+                createHourly(jsonObj);
+            } catch (JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
             }
         } else {
             Log.e(TAG, "Couldn't get json from server.");
         }
-    }
+        }
+
     public String retrieveTime(String time) {
         String timeStr = "";
         for (int i = 11; i <= 12; i++) {
             timeStr += time.charAt(i);
         }
         return timeStr;
+    }
+
+    public void createHourly(JSONObject obj) {
+        String time;
+        JSONArray tempArray, weatherArray;
+        try {
+            JSONObject current = obj.getJSONObject("current");//move to current object for current time first
+            time = retrieveTime(current.getString("time"));
+            JSONObject hourly = obj.getJSONObject("hourly");
+            tempArray = hourly.getJSONArray("temperature_2m");
+            weatherArray = hourly.getJSONArray("weather_code");
+
+            int theTime = Integer.parseInt(time) + 1;
+            int endTime = theTime + NUM_OF_HOUR;
+            String temp, icon;
+            for (int i = theTime; i < endTime; i++) {
+                String string_i = Integer.toString(i);
+                temp = tempArray.getString(i);
+                icon = wDataType.wIconMap.get(weatherArray.getString(i));
+                Hourly theHourly = new Hourly(string_i, temp, icon);
+                Hourly.addHourly(theHourly);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

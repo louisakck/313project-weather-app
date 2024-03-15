@@ -3,7 +3,7 @@ package hkmu.comps321f.weather_app.Domains;
 import java.util.HashMap;
 import java.util.Map;
 
-public class weatherIconMap {
+public class wDataType {
     public static Map<String, String> wIconMap;
     static {
         wIconMap = new HashMap<>();

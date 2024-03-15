@@ -4,13 +4,11 @@ import org.json.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.String;
-import java.text.DateFormat;
 
 
 public class CurrentDetail {
@@ -161,7 +159,7 @@ public class CurrentDetail {
     }
 
     public String translateIcon(String w_code) {
-        return weatherIconMap.wIconMap.get(w_code);
+        return wDataType.wIconMap.get(w_code);
     }
     public String translateDescription(String w_code) {
         return wCodeList.get(w_code);
