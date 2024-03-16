@@ -67,7 +67,7 @@ public class wDataType {
 
     public static String translateIcon(String w_code) {
         return wIconMap.get(w_code);
-    }
-    public static String translateDescription(String w_code) {return wCodeList.get(w_code);}
+    }    //convert weather code to icon name
+    public static String translateDescription(String w_code) {return wCodeList.get(w_code);}   //convert weather code to weather status description
 
 }

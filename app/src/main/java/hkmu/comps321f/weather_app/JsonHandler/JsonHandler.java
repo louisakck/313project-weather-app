@@ -28,14 +28,21 @@ import hkmu.comps321f.weather_app.Domains.wDataType;
 
 public class JsonHandler extends Thread {
     private static final String TAG = "JsonHandler";
+    //private String lat = "22.2783";
+    //private String lon = "114.1747";
+    private String lat;
+    private String lon;
+    private String weatherUrl;
 
-    String lat = "22.2783";
-    String lon = "114.1747";
-
-    private String weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=14";
     //"https://api.open-meteo.com/v1/forecast?latitude=22.2783&longitude=114.1747&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=14";
 
     private final int NUM_OF_HOUR = 12;//num of element in hourly
+
+    public JsonHandler(String lat, String lon){
+        this.lat = lat;
+        this.lon = lon;
+        weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + this.lat + "&longitude=" + this.lon + "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=14";
+    }
 
     public static String makeRequest(String weatherUrl) {
         String response = null;
@@ -205,7 +212,7 @@ public class JsonHandler extends Thread {
             minTempArray = daily.getJSONArray("temperature_2m_min");
 
             String weekday, icon, status, maxTemp, minTemp;
-            for (int i = 1; i < 7; i++){
+            for (int i = 2; i < 8; i++){
                 weekday = convertDate(timeArray.getString(i));
                 icon = wDataType.translateIcon(weatherArray.getString(i));
                 status = wDataType.translateDescription(weatherArray.getString(i));

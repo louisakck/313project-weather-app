@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.*;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,9 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import hkmu.comps321f.weather_app.Domains.CurrentDetail;
 import hkmu.comps321f.weather_app.Domains.TomorrowDomain;
-import hkmu.comps321f.weather_app.JsonHandler.JsonHandler;
 import hkmu.comps321f.weather_app.R;
 import hkmu.comps321f.weather_app.Domains.ForecastDomain;
 import hkmu.comps321f.weather_app.Adapter.ForecastAdapter;
@@ -52,8 +49,8 @@ public class ForecastActivity extends AppCompatActivity {
         tomorrowWeatherImg.setImageResource(tTomorrowIcon);
         /*-----------------------------------*/
 
-        initRecyclerView(ForecastDomain.forecastArrayList);
-        setVariable();
+        initRecyclerView(ForecastDomain.forecastArrayList);//next 6 days forecast
+        setVariable();// back button
     }
 
     private void setVariable(){
