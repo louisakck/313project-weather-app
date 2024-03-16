@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     TextView date, todayWeather, currentTemp, tempRange, rain, wind, humid;
     ImageView todayWeatherImg;
     LinearLayout currentLayout;
-    private List<CurrentDetail> list;
+    //private List<CurrentDetail> list;
 
 
     @Override
