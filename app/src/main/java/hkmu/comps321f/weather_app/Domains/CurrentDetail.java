@@ -1,55 +1,30 @@
 package hkmu.comps321f.weather_app.Domains;
 
-import org.json.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.String;
-import java.text.DateFormat;
+
 
 
 public class CurrentDetail {
-    private String w_code, description, temp, temp_min, temp_max, rain, humidity, wind_speed, date, pic_path;
+    //current weather in main activity
+    private String description, temp, temp_min, temp_max, rain, humidity, wind_speed, date, pic_path;
     public static ArrayList<CurrentDetail> currentDetailArrayList = new ArrayList<>();
-    private static Map<String, String> wCodeList;
-    static {
-        wCodeList = new HashMap<>();
-        wCodeList.put("0","Clear Sky");
-        wCodeList.put("1","Mainly Clear");
-        wCodeList.put("2","Partly Cloudy");
-        wCodeList.put("3","Overcast");
-        wCodeList.put("45","Fog");
-        wCodeList.put("48","Rime Fog");
-        wCodeList.put("51","Drizzle");
-        wCodeList.put("53","Drizzle");
-        wCodeList.put("55","Dense Drizzle");
-        wCodeList.put("56","Freezing Drizzle");
-        wCodeList.put("57","Dense Freezing Drizzle");
-        wCodeList.put("61","Slightly Rain");
-        wCodeList.put("63","Rain");
-        wCodeList.put("65","Heavy Rain");
-        wCodeList.put("66","Freezing Rain");
-        wCodeList.put("67","Heavy Freezing Rain");
-        wCodeList.put("71","Slight Snow");
-        wCodeList.put("73","Snow");
-        wCodeList.put("75","Heavy Snow");
-        wCodeList.put("77","Snow Grain");
-        wCodeList.put("80","Slight Rain Shower");
-        wCodeList.put("81","Rain Shower");
-        wCodeList.put("82","Violent Rain Shower");
-        wCodeList.put("85","Snow Shower");
-        wCodeList.put("86","Heavy Snow Shower");
-        wCodeList.put("96","Thunderstorm");
-    }
+
+    public CurrentDetail(String description, String temp, String temp_min, String temp_max, String rain, String humidity, String wind_speed, String date, String pic_path) {
+        this.description = description;
+        this.temp = temp;
+        this.temp_min = temp_min;
+        this.temp_max = temp_max;
+        this.rain = rain;
+        this.humidity = humidity;
+        this.wind_speed = wind_speed;
+        this.date = date;
+        this.pic_path = pic_path;
 
 
-    public CurrentDetail(JSONObject jsonObj) {
-        try {
+
+        /*try {
             JSONObject current = jsonObj.getJSONObject("current");//move to current object
             //this.c_time = current.getString("time");
             this.date = retrieveDate(current.getString("time"));
@@ -63,13 +38,12 @@ public class CurrentDetail {
             this.temp_max = dailyMaxTempArray.getString(0);
             JSONArray dailyMinTempArray = (JSONArray) daily.get("temperature_2m_min");
             this.temp_min = dailyMinTempArray.getString(0);
-            this.description = translateDescription(w_code);
-            this.pic_path = translateIcon(w_code);
+            this.description = wDataType.translateDescription(w_code);
+            this.pic_path = wDataType.translateIcon(w_code);
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-
+        }*/
     }
 
     public String getDate() {
@@ -78,14 +52,6 @@ public class CurrentDetail {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getW_code() {
-        return w_code;
-    }
-
-    public void setW_code(String w_code) {
-        this.w_code = w_code;
     }
 
     public String getDescription() {
@@ -160,30 +126,11 @@ public class CurrentDetail {
         this.pic_path = pic_path;
     }
 
-    public String translateIcon(String w_code) {
-        return weatherIconMap.wIconMap.get(w_code);
-    }
-    public String translateDescription(String w_code) {
-        return wCodeList.get(w_code);
-    }
+    //public String translateIcon(String w_code) {
+        //return wDataType.wIconMap.get(w_code);
+    //}
+    //public String translateDescription(String w_code) {return wDataType.wCodeList.get(w_code);}
 
-    public String retrieveDate(String time) {
-        String dateStr = "";
-        String newDate = "";
-        for (int i = 0; i <= 10; i++) {
-            dateStr += time.charAt(i);
-
-        }
-        try {
-            Date theDate = new SimpleDateFormat("yyyy-mm-dd").parse(dateStr);
-            SimpleDateFormat newDateFormat = new SimpleDateFormat("dd MMM yyyy");
-            newDate = (String) newDateFormat.format(theDate);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return newDate;
-    }
 
     public static void addCurrentDetail(CurrentDetail c){
         currentDetailArrayList.add(c);

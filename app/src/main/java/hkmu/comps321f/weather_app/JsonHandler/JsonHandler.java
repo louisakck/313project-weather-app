@@ -16,16 +16,33 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import hkmu.comps321f.weather_app.Domains.CurrentDetail;
+import hkmu.comps321f.weather_app.Domains.ForecastDomain;
 import hkmu.comps321f.weather_app.Domains.Hourly;
-import hkmu.comps321f.weather_app.Domains.weatherIconMap;
+import hkmu.comps321f.weather_app.Domains.TomorrowDomain;
+import hkmu.comps321f.weather_app.Domains.wDataType;
 
 public class JsonHandler extends Thread {
     private static final String TAG = "JsonHandler";
+    //private String lat = "22.2783";
+    //private String lon = "114.1747";
+    private String lat;
+    private String lon;
+    private String weatherUrl;
 
-    private String weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=22.2783&longitude=114.1747&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,wind_speed_10m_max";
+    //"https://api.open-meteo.com/v1/forecast?latitude=22.2783&longitude=114.1747&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=14";
+
+    private final int NUM_OF_HOUR = 12;//num of element in hourly
+
+    public JsonHandler(String lat, String lon){
+        this.lat = lat;
+        this.lon = lon;
+        weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=" + this.lat + "&longitude=" + this.lon + "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,rain,showers,snowfall,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=14";
+    }
 
     public static String makeRequest(String weatherUrl) {
         String response = null;
@@ -82,46 +99,166 @@ public class JsonHandler extends Thread {
 
         if (weatherStr != null) {
             try {
-                //get current weather
                 JSONObject jsonObj = new JSONObject(weatherStr);
-                CurrentDetail currentWeather = new CurrentDetail(jsonObj);
-                CurrentDetail.addCurrentDetail(currentWeather);
+                //get current weather
+                createCurrent(jsonObj);
                 //get hourly weather
-                JSONObject current = jsonObj.getJSONObject("current");//move to current object for current time first
-                String time = retrieveTime(current.getString("time"));
-                JSONObject hourly = jsonObj.getJSONObject("hourly");
-                JSONArray tempArray = hourly.getJSONArray("temperature_2m");
-                JSONArray weatherArray = hourly.getJSONArray("weather_code");
-
-                int theTime = Integer.parseInt(time);
-                int endTime = theTime+12;
-                String temp, icon;
-                ArrayList<Hourly> hourlyArrayList = new ArrayList<>();
-                for (int i = theTime; i < endTime; i++) {
-                    String string_i = Integer.toString(i);
-                    temp = tempArray.getString(i);
-                    icon = weatherIconMap.wIconMap.get(weatherArray.getString(i));
-                    Hourly theHourly = new Hourly(string_i, temp, icon);
-                    Hourly.addHourly(theHourly);
-                }
-
-
-                //updateUI(current);
-
-
-            } catch (final JSONException e) {
+                createHourly(jsonObj);
+                //get tomorrow weather
+                createTomorrow(jsonObj);
+                //get forecast weather
+                createForecast(jsonObj);
+            } catch (JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
             }
         } else {
             Log.e(TAG, "Couldn't get json from server.");
         }
-    }
+        }
+
     public String retrieveTime(String time) {
         String timeStr = "";
         for (int i = 11; i <= 12; i++) {
             timeStr += time.charAt(i);
         }
         return timeStr;
+    }
+
+    public void createCurrent(JSONObject obj){
+        String date, temp, w_code, humidity, wind_speed, rain, temp_max, temp_min, status, pic_path;
+        try {
+            JSONObject current = obj.getJSONObject("current");//move to current object
+            date = retrieveDate(current.getString("time"));
+            temp = current.getString("temperature_2m");
+            w_code = current.getString("weather_code");
+            humidity = current.getString("relative_humidity_2m");
+            wind_speed = current.getString("wind_speed_10m");
+            rain = current.getString("rain");
+            JSONObject daily = obj.getJSONObject("daily");//move to daily object
+            JSONArray dailyMaxTempArray = (JSONArray) daily.get("temperature_2m_max");
+            temp_max = dailyMaxTempArray.getString(0);
+            JSONArray dailyMinTempArray = (JSONArray) daily.get("temperature_2m_min");
+            temp_min = dailyMinTempArray.getString(0);
+            status = wDataType.translateDescription(w_code);
+            pic_path = wDataType.translateIcon(w_code);
+            CurrentDetail currentDetail = new CurrentDetail(status, temp, temp_min, temp_max, rain, humidity, wind_speed, date, pic_path);
+            CurrentDetail.addCurrentDetail(currentDetail);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Current parsing error: " + e.getMessage());
+        }
+    }
+
+    public void createHourly(JSONObject obj) {
+        String time;
+        JSONArray tempArray, weatherArray;
+        try {
+            JSONObject current = obj.getJSONObject("current");//move to current object for current time first
+            time = retrieveTime(current.getString("time"));
+            JSONObject hourly = obj.getJSONObject("hourly");
+            tempArray = hourly.getJSONArray("temperature_2m");
+            weatherArray = hourly.getJSONArray("weather_code");
+
+            int theTime = Integer.parseInt(time) + 1;
+            int endTime = theTime + NUM_OF_HOUR;
+            String temp, icon;
+            for (int i = theTime; i < endTime; i++) {
+                String string_i = Integer.toString(i);
+                temp = tempArray.getString(i);
+                icon = wDataType.wIconMap.get(weatherArray.getString(i));
+                Hourly theHourly = new Hourly(string_i, temp, icon);
+                Hourly.addHourly(theHourly);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Hourly parsing error: " + e.getMessage());
+        }
+
+    }
+
+    public void createTomorrow(JSONObject obj){
+        String w_code, status, temp_max, temp_min, rain, wind_speed,  pic_path;
+        JSONArray weatherArray, maxTempArray, minTempArray, rainArray, windSpeedArray;
+        try {
+            JSONObject daily = obj.getJSONObject("daily");//move to current object
+            weatherArray = daily.getJSONArray("weather_code");
+            maxTempArray = daily.getJSONArray("temperature_2m_max");
+            minTempArray = daily.getJSONArray("temperature_2m_min");
+            rainArray = daily.getJSONArray("precipitation_probability_max");
+            windSpeedArray = daily.getJSONArray("wind_speed_10m_max");
+
+            w_code = weatherArray.getString(1);
+            temp_max = maxTempArray.getString(1);
+            temp_min = minTempArray.getString(1);
+            rain = rainArray.getString(1);
+            wind_speed = windSpeedArray.getString(1);
+            status = wDataType.translateDescription(w_code);
+            pic_path = wDataType.translateIcon(w_code);
+            TomorrowDomain tomorrowDomain = new TomorrowDomain(status, temp_max, temp_min, rain, wind_speed, pic_path);
+            TomorrowDomain.addTomorrow(tomorrowDomain);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Tomorrow parsing error: " + e.getMessage());
+        }
+    }
+
+    public void createForecast(JSONObject obj) {
+        String time;
+        JSONArray timeArray, weatherArray, maxTempArray, minTempArray;
+        try {
+            JSONObject daily = obj.getJSONObject("daily");//move to current object for current time first
+            timeArray = daily.getJSONArray("time");
+            weatherArray = daily.getJSONArray("weather_code");
+            maxTempArray = daily.getJSONArray("temperature_2m_max");
+            minTempArray = daily.getJSONArray("temperature_2m_min");
+
+            String weekday, icon, status, maxTemp, minTemp;
+            for (int i = 2; i < 8; i++){
+                weekday = convertDate(timeArray.getString(i));
+                icon = wDataType.translateIcon(weatherArray.getString(i));
+                status = wDataType.translateDescription(weatherArray.getString(i));
+                maxTemp = maxTempArray.getString(i);
+                minTemp = minTempArray.getString(i);
+                ForecastDomain theForecast = new ForecastDomain(weekday, icon, status, maxTemp, minTemp);
+                ForecastDomain.addForecastDomain(theForecast);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Forecast parsing error: " + e.getMessage());
+        }
+
+    }
+
+    public String retrieveDate(String time) {
+        //retrieve current date for CurrentDetail
+        String dateStr = "";
+        String newDate = "";
+        for (int i = 0; i <= 10; i++) {
+            dateStr += time.charAt(i);
+
+        }
+        try {
+            Date theDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+            SimpleDateFormat newDateFormat = new SimpleDateFormat("dd MMM yyyy");
+            newDate = (String) newDateFormat.format(theDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
+    }
+
+    public String convertDate(String time) {
+        //convert date to weekday for forecast
+        String newDate = "";
+
+        try {
+            Date theDate = new SimpleDateFormat("yyyy-MM-dd").parse(time);
+            SimpleDateFormat newDateFormat = new SimpleDateFormat("EEE");
+            newDate = (String) newDateFormat.format(theDate);
+
+        } catch (ParseException e) {
+            Log.e(TAG, "Json Forecast convert weekday error: " + e.getMessage());
+        }
+        return newDate;
     }
 
 }

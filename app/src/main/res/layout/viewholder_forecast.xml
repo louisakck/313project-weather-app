@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/dayText"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="day"
@@ -16,29 +16,31 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/weatherImg"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/rain"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dayText" />
+        app:layout_constraintEnd_toStartOf="@+id/statusText"
+        app:layout_constraintStart_toEndOf="@+id/dayText"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:text="Status"
-        android:textSize="14sp"
         android:textColor="@color/white"
-        android:layout_marginStart="16dp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/weatherImg"
         app:layout_constraintStart_toEndOf="@+id/weatherImg"
-        app:layout_constraintTop_toTopOf="@id/weatherImg"/>
+        app:layout_constraintTop_toTopOf="@id/weatherImg" />
 
     <TextView
         android:id="@+id/lowText"

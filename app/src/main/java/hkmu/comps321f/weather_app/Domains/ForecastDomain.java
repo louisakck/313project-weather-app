@@ -1,15 +1,16 @@
 package hkmu.comps321f.weather_app.Domains;
 
-public class ForecastDomain {
-    private String day;
-    private String picPath;
-    private String status;
-    private int highTemp;
-    private int lowTemp;
+import java.util.ArrayList;
 
-    public ForecastDomain(String day, String picPath, String status, int highTemp, int lowTemp) {
+public class ForecastDomain {
+    //Next 6 days in forecast activity
+    private String day, pic_path, status, highTemp, lowTemp;
+
+    public static ArrayList<ForecastDomain> forecastArrayList = new ArrayList<>();
+
+    public ForecastDomain(String day, String pic_path, String status, String highTemp, String lowTemp) {
         this.day = day;
-        this.picPath = picPath;
+        this.pic_path = pic_path;
         this.status = status;
         this.highTemp = highTemp;
         this.lowTemp = lowTemp;
@@ -25,11 +26,11 @@ public class ForecastDomain {
     }
 
     public String getPicPath() {
-        return picPath;
+        return pic_path;
     }
 
     public void setPicPath(String picPath) {
-        this.picPath = picPath;
+        this.pic_path = picPath;
     }
 
     public String getStatus() {
@@ -40,20 +41,25 @@ public class ForecastDomain {
         this.status = status;
     }
 
-    public int getHighTemp() {
+    public String getHighTemp() {
         return highTemp;
     }
 
-    public void setHighTemp(int highTemp) {
+    public void setHighTemp(String highTemp) {
         this.highTemp = highTemp;
     }
 
-    public int getLowTemp() {
+    public String getLowTemp() {
         return lowTemp;
     }
 
-    public void setLowTemp(int lowTemp) {
+    public void setLowTemp(String lowTemp) {
         this.lowTemp = lowTemp;
     }
 
+    public static void addForecastDomain(ForecastDomain f){
+        forecastArrayList.add(f);
+    }
 }
+
+

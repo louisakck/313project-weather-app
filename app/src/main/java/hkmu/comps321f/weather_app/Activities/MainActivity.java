@@ -1,7 +1,6 @@
 package hkmu.comps321f.weather_app.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,21 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-
 import com.bumptech.glide.Glide;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.*;
 import java.util.ArrayList;
-import org.json.JSONObject;
-import org.json.JSONException;
-import java.util.List;
-
-import hkmu.comps321f.weather_app.Adapter.CurrentAdapter;
 import hkmu.comps321f.weather_app.Adapter.HourlyAdapter;
 import hkmu.comps321f.weather_app.Domains.CurrentDetail;
 import hkmu.comps321f.weather_app.Domains.Hourly;
@@ -49,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     TextView date, todayWeather, currentTemp, tempRange, rain, wind, humid;
     ImageView todayWeatherImg;
     LinearLayout currentLayout;
-    private List<CurrentDetail> list;
+    //private List<CurrentDetail> list;
 
 
     @Override
@@ -68,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
         todayWeatherImg = findViewById(R.id.todayWeatherImg);
 
         /*-----------------------------------*/
-        JsonHandler jsonHandler = new JsonHandler();
+        JsonHandler jsonHandler = new JsonHandler("22.2783", "114.1747");//feed JsonHandler with coordinate
+
         jsonHandler.start();
         try{
             jsonHandler.join();
