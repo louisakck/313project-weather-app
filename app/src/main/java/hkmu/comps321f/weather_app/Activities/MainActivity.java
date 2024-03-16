@@ -75,10 +75,6 @@ public class MainActivity extends AppCompatActivity {
         int cWeatherIcon = getResources().getIdentifier(current.getPic_path(), "drawable", getPackageName());
         todayWeatherImg.setImageResource(cWeatherIcon);
 
-        //CurrentAdapter currentAdapter = new CurrentAdapter(this,CurrentDetail.currentDetailArrayList);
-        //currentLayout.setAdapter(currentAdapter);
-
-
         /*-----------------------------------*/
 
         initRecyclerView(Hourly.hourlyArrayList);// hourly view
