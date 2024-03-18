@@ -203,22 +203,26 @@ public class JsonHandler extends Thread {
 
     public void createForecast(JSONObject obj) {
         String time;
-        JSONArray timeArray, weatherArray, maxTempArray, minTempArray;
+        JSONArray timeArray, weatherArray, maxTempArray, minTempArray, rainArray, wind_speedArray;
         try {
             JSONObject daily = obj.getJSONObject("daily");//move to current object for current time first
             timeArray = daily.getJSONArray("time");
             weatherArray = daily.getJSONArray("weather_code");
             maxTempArray = daily.getJSONArray("temperature_2m_max");
             minTempArray = daily.getJSONArray("temperature_2m_min");
+            rainArray = daily.getJSONArray("precipitation_probability_max");
+            wind_speedArray = daily.getJSONArray("wind_speed_10m_max");
 
-            String weekday, icon, status, maxTemp, minTemp;
+            String weekday, icon, status, maxTemp, minTemp, rain, wind_speed;
             for (int i = 2; i < 8; i++){
                 weekday = convertDate(timeArray.getString(i));
                 icon = wDataType.translateIcon(weatherArray.getString(i));
                 status = wDataType.translateDescription(weatherArray.getString(i));
                 maxTemp = maxTempArray.getString(i);
                 minTemp = minTempArray.getString(i);
-                ForecastDomain theForecast = new ForecastDomain(weekday, icon, status, maxTemp, minTemp);
+                rain = rainArray.getString(i);
+                wind_speed = wind_speedArray.getString(i);
+                ForecastDomain theForecast = new ForecastDomain(weekday, icon, status, maxTemp, minTemp, rain, wind_speed);
                 ForecastDomain.addForecastDomain(theForecast);
             }
         } catch (JSONException e) {
