@@ -66,18 +66,14 @@ public class MainActivity extends AppCompatActivity {
         CurrentDetail current = CurrentDetail.currentDetailArrayList.get(0);
         date.setText(current.getDate());
         todayWeather.setText(current.getDescription());
-        currentTemp.setText(current.getTemp() + "°");
-        tempRange.setText("H: " + current.getTemp_max()+"°  L: " + current.getTemp_min() + "°");
+        currentTemp.setText(current.getTemp() + " °");
+        tempRange.setText("H: " + current.getTemp_max()+" °  L: " + current.getTemp_min() + " °");
         rain.setText(current.getRain() + " mm");
         wind.setText(current.getWind_speed() + " Km/h");
         humid.setText(current.getHumidity() + " %");
 
         int cWeatherIcon = getResources().getIdentifier(current.getPic_path(), "drawable", getPackageName());
         todayWeatherImg.setImageResource(cWeatherIcon);
-
-        //CurrentAdapter currentAdapter = new CurrentAdapter(this,CurrentDetail.currentDetailArrayList);
-        //currentLayout.setAdapter(currentAdapter);
-
 
         /*-----------------------------------*/
 
