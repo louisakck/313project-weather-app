@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_1"
+    style="@style/ScreenBackground"
     tools:context=".Activities.MainActivity">
         <LinearLayout
             android:id="@+id/cLayout"
@@ -17,6 +17,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Switch
+                    android:id="@+id/switcher"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:text="Light/Night Mode"
+                    style="@style/TextColor"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/day"
                 android:layout_width="match_parent"
@@ -24,7 +38,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Today"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/TextColor"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -35,14 +49,14 @@
                 android:layout_marginTop="8dp"
                 android:text="Date"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                style="@style/TextColor"
                 android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
-                android:background="@drawable/background_2"
+                style="@style/HolderBackground"
                 android:orientation="vertical">
 
                 <ImageView
@@ -59,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:text="Status"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    style="@style/TextColor"
                     android:textSize="20sp" />
 
                 <TextView
@@ -69,7 +83,7 @@
                     android:layout_marginTop="4dp"
                     android:text="0°"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    style="@style/TextColor"
                     android:textSize="43sp" />
 
                 <TextView
@@ -78,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text="H:0  L:0"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    style="@style/TextColor"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -105,7 +119,7 @@
                             android:layout_height="wrap_content"
                             android:text="0%"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
 
                         <TextView
                             android:id="@+id/rain"
@@ -113,7 +127,7 @@
                             android:layout_height="wrap_content"
                             android:text="Rain"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -135,7 +149,7 @@
                             android:layout_height="wrap_content"
                             android:text="0 km/h"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
 
                         <TextView
                             android:id="@+id/wind"
@@ -143,7 +157,7 @@
                             android:layout_height="wrap_content"
                             android:text="Wind Speed"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -165,7 +179,7 @@
                             android:layout_height="wrap_content"
                             android:text="0%"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
 
                         <TextView
                             android:id="@+id/humid"
@@ -173,7 +187,7 @@
                             android:layout_height="wrap_content"
                             android:text="Humidity"
                             android:textAlignment="center"
-                            android:textColor="@color/white" />
+                            style="@style/TextColor" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -200,7 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Next 7 days >"
-                    android:textColor="@color/white"
+                    style="@style/TextColor"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

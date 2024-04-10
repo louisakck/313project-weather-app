@@ -4,4 +4,11 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <style name="ScreenBackground"><item name="android:background">@color/bg_1</item></style>
+    <style name="HolderBackground"><item name="android:background">@color/bg_2</item></style>
+    <style name="TextColor"><item name="android:textColor">@color/white</item></style>
+    <style name="BtnChange"><item name="android:src">@drawable/leftarrow</item><item name="android:background">@drawable/btn_background</item></style>
+    <style name="HolderChange"><item name="android:background">@drawable/background_hourly</item></style>
 </resources>
+

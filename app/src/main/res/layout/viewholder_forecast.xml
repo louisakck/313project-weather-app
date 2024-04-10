@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/background_2">
+    style="@style/HolderChange">
 
 
     <LinearLayout
@@ -23,50 +23,51 @@
                 android:id="@+id/dayText"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
                 android:text="day"
-                android:textColor="@color/white"
+                style="@style/TextColor"
                 android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/weatherImg"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/rain" />
 
             <TextView
                 android:id="@+id/statusText"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="14dp"
                 android:text="Status"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                style="@style/TextColor"
+                android:textSize="14sp"
+                android:textAlignment="center"/>
 
             <TextView
                 android:id="@+id/lowText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="55dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
                 android:layout_marginEnd="8dp"
                 android:text="18"
-                android:textColor="@color/white"
+                style="@style/TextColor"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/highText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="8dp"
                 android:text="24"
-                android:textColor="@color/white"
+                style="@style/TextColor"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -97,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:text="18%"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    style="@style/TextColor" />
 
                 <TextView
                     android:id="@+id/rain"
@@ -105,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:text="Rain"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    style="@style/TextColor" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -126,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:text="12 km/h"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    style="@style/TextColor" />
 
                 <TextView
                     android:id="@+id/wind"
@@ -134,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:text="Wind Speed"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    style="@style/TextColor" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

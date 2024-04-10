@@ -5,4 +5,9 @@
     <color name="bg_1">#161c2a</color>
     <color name="bg_2">#1a2332</color>
     <color name="yellow">#fdd020</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_300">#E0E0E0</color>
+
+    <color name="dark_grey">#212121</color>
 </resources>
