@@ -213,7 +213,7 @@
                     android:id="@+id/nextBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Next 7 days >"
+                    android:text="Forecast >"
                     style="@style/TextColor"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -232,9 +232,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
-
-                >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/urlBtn"
@@ -250,7 +248,6 @@
                     />
             </LinearLayout>
         </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
