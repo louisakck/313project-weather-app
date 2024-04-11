@@ -1,6 +1,8 @@
 package hkmu.comps321f.weather_app.Activities;
 
 
+import static android.app.ProgressDialog.show;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
@@ -11,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     boolean nightMODE;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    // URL
+    TextView web;
     //-------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,16 @@ public class MainActivity extends AppCompatActivity {
                 editor.apply();
             }
         });
+        /*-----------URL-------------*/
+        web = findViewById(R.id.urlBtn);
+        web.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                goUrl("https://www.hko.gov.hk/en/index.html");
+            }
+        });
+
+
         //----------------------------------
         currentLayout = findViewById(R.id.cLayout);
 
@@ -142,7 +157,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         adaptorHourly=new HourlyAdapter(hourlyArrayList);
         recyclerView.setAdapter(adaptorHourly);
-
-
         }
+        /*-----------URL-------------*/
+    void goUrl(String s){
+        try{
+            Uri uri = Uri.parse(s);
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), "No Website Linked", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     }
