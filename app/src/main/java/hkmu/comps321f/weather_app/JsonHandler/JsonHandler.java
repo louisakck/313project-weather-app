@@ -214,6 +214,7 @@ public class JsonHandler extends Thread {
             wind_speedArray = daily.getJSONArray("wind_speed_10m_max");
 
             String weekday, icon, status, maxTemp, minTemp, rain, wind_speed;
+            ForecastDomain.forecastArrayList.clear();
             for (int i = 2; i < 8; i++){
                 weekday = convertDate(timeArray.getString(i));
                 icon = wDataType.translateIcon(weatherArray.getString(i));
@@ -235,8 +236,8 @@ public class JsonHandler extends Thread {
         //retrieve current date for CurrentDetail
         String dateStr = "";
         String newDate = "";
-        for (int i = 0; i <= 10; i++) {
-            dateStr += time.charAt(i);
+        for (int j = 0; j <= 10; j++) {
+            dateStr += time.charAt(j);
 
         }
         try {
